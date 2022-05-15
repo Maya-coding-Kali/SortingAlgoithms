@@ -1,11 +1,18 @@
 // SortingAlgoithms.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+//some code is borrowed and some is self written
 
 #include <iostream>
 #include<algorithm>
 #include<array>
 #include<vector>
 #include<map>
+#include<algorithm>
+//Commit 97138c1a4335fec1ab617f2cc0e8093485b7cbc0
+//Author : Mayas <Mayas@DESKTOP - STPU0PM>
+//Date : May 6, 2022 10 : 18 PM
+//Parent : dbb4e171
+//
+//Add project files.
 void MainMenu();
 void InsertionSort(int* arr, int n);
 int* RandomGeno();
@@ -14,11 +21,15 @@ void tag_sort(int collection[], int tag[], int size);
 int shellSort(int arr[], int N);
 void IndexSort(int* arr, int N);
 void BucketSort(int arr[], int N);
+void quickSort(int array[], int low, int high);
+void print(int *array, int n);
+void MergeSort(int array[], int const begin, int const end);
 int main()
 {
 
 	std::cout << "\nWelcome to the sorting algorithm exraveganze\n";
 	MainMenu();
+	return 0;
 }
 void MainMenu()
 {
@@ -60,11 +71,16 @@ void MainMenu()
 		break;
 	case 7:
 		std::cout << yC << "Quick sort\n";
-		
+		quickSort(RandomGeno(), 0, 19);
+		RandomGeno();
+		//or we could just use the STl as it is mostly quick sort
 		break;
 	case 8:
 		std::cout << yC << "Merge sort\n";
-
+		int temp[20];
+		
+		MergeSort(RandomGeno(),  0, 19);
+		RandomGeno();
 		break;
 	case 9:
 		std::cout << yC << "Heap sort\n";
@@ -98,10 +114,6 @@ void InsertionSort(int* arr, int n)
 	{
 		key = arr[i];
 		j = i - 1;
-
-		/* Move elements of arr[0..i-1], that are
-		greater than key, to one position ahead
-		of their current position */
 		while (j >= 0 && arr[j] > key)
 		{
 			arr[j + 1] = arr[j];
@@ -131,10 +143,8 @@ void BubbleSort(int* arr, int n)
 }
 void tag_sort(int collection[], int tag[], int size)
 {
-	//Loop controlling variables
 	int i = 0;
 	int j = 0;
-	//used to swap tag value
 	int temp = 0;
 	for (i = 0; i < size; i++)
 	{
@@ -142,7 +152,6 @@ void tag_sort(int collection[], int tag[], int size)
 		{
 			if (collection[tag[i]] > collection[tag[j]])
 			{
-				//When need to swap the value of tag element
 				temp = tag[i];
 				tag[i] = tag[j];
 				tag[j] = temp;
@@ -161,13 +170,10 @@ int shellSort(int arr[], int N)
 	{
 		for (int i = gap; i < N; i += 1)
 		{
-			//sort sub lists created by applying gap 
 			int temp = arr[i];
-
 			int j;
 			for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
 				arr[j] = arr[j - gap];
-
 			arr[j] = temp;
 		}
 	}
@@ -209,7 +215,7 @@ void BucketSort(int arr[], int N)
 		newArray[i] = arr[i];
 
 	}
-	while (counter < 3)
+	while (counter < 1)
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -297,19 +303,93 @@ void BucketSort(int arr[], int N)
 */
 
 }
-void QuickSort(int arr[], int leftmost, int rightmost)
-{
-	std::vector<int> myVect;
-	for (int i = 0; i < 20; i++)
-	{
-		myVect[i] = arr[i];
-	}
-	if (myVect.size() < 1)
-	{
-		return;
-	}
 
+void swap(int* a, int* b) {
+
+	int t = *a;
+	*a = *b;
+	*b = t;
 }
+void printArray(int array[], int size) {
+	int i;
+	for (i = 0; i < size; i++)
+		std::cout << array[i] << " ";
+	std::cout << std::endl;
+}
+int partition(int array[], int low, int high) {
+
+	int newArray[20];
+	for (int i = 0; i < high; i++)
+	{
+		newArray[i] = array[i];
+	}
+	int pivot = array[high];
+
+	int i = (low - 1);
+	for (int j = low; j < high; j++) {
+		if (array[j] <= pivot) {
+			i++;
+			swap(&array[i], &array[j]);
+		}
+	}
+		swap(&array[i + 1], &array[high]);
+	return (i + 1);
+}
+
+void quickSort(int array[], int low, int high) {
+	if (low < high) {
+		int pi = partition(array, low, high);
+		quickSort(array, low, pi - 1);
+		quickSort(array, pi + 1, high);
+	}
+}
+void merge(int array[], int const left, int const mid, int const right)
+{
+	auto const subArrayOne = mid - left + 1;
+	auto const subArrayTwo = right - mid;
+	auto* leftArray = new int[subArrayOne],
+		* rightArray = new int[subArrayTwo];
+	for (auto i = 0; i < subArrayOne; i++)
+		leftArray[i] = array[left + i];
+	for (auto j = 0; j < subArrayTwo; j++)
+		rightArray[j] = array[mid + 1 + j];
+
+	auto indexOfSubArrayOne = 0,
+		indexOfSubArrayTwo = 0;
+	int indexOfMergedArray = left;
+	while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
+		if (leftArray[indexOfSubArrayOne] <= rightArray[indexOfSubArrayTwo]) {
+			array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
+			indexOfSubArrayOne++;
+		}
+		else {
+			array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
+			indexOfSubArrayTwo++;
+		}
+		indexOfMergedArray++;
+	}
+	while (indexOfSubArrayOne < subArrayOne) {
+		array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
+		indexOfSubArrayOne++;
+		indexOfMergedArray++;
+	}
+	while (indexOfSubArrayTwo < subArrayTwo) {
+		array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
+		indexOfSubArrayTwo++;
+		indexOfMergedArray++;
+	}
+}
+void MergeSort(int array[], int const begin, int const end)
+{
+	if (begin >= end)
+		return;
+	auto mid = begin + (end - begin) / 2;
+	MergeSort(array, begin, mid);
+	MergeSort(array, mid + 1, end);
+	merge(array, begin, mid, end);
+}
+
+
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
