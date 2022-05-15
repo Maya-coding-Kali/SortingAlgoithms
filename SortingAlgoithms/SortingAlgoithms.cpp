@@ -7,12 +7,7 @@
 #include<vector>
 #include<map>
 #include<algorithm>
-//Commit 97138c1a4335fec1ab617f2cc0e8093485b7cbc0
-//Author : Mayas <Mayas@DESKTOP - STPU0PM>
-//Date : May 6, 2022 10 : 18 PM
-//Parent : dbb4e171
-//
-//Add project files.
+
 void MainMenu();
 void InsertionSort(int* arr, int n);
 int* RandomGeno();
